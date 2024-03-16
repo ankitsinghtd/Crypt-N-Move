@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoName</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <!-- <link rel="stylesheet" href="css/indexmedia.css" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mogra&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav id="desktop-nav">
+      <div class="logo">NoName</div>
+      <div>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="send.html">Send</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <nav id="hamburger-nav">
+      <div class="logo">VoteChain</div>
+      <div class="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="menu-links">
+          <li><a href="#" onclick="toggleMenu()">Home</a></li>
+          <li><a href="/send" onclick="toggleMenu()">Send</a></li>
+          <li><a href="#" onclick="toggleMenu()">About</a></li>
+          <li><a href="#" onclick="toggleMenu()">Contact</a></li>
+        </div>
+      </div>
+    </nav>
+    <main class="main-content">
+      <h1>Securing Transfers, One P2P Encryption at a Time</h1>
+      <h2>Secure . Transparent . Accurate</h2>
+    </main>
+    <div class="usp-heading">
+      <h1>Democracy Redefined</h1>
+      <h1>Crowdsource Decision-Making</h1>
+      <div class="home-buttons">
+        <button class="make-a-vote"><span>Make a Vote</span></button>
+      <button class="create-a-poll"><span>Create a Poll</span></button>
+      <button id="signInButton"><span>Log In</span></button>
+      <button id="signOutButton"><span>Sign Out</span></button>
+      <div id="message">
+        <p>You are signed in !</p>
+      </div>
+      <form id="emailPasswordForm" style="display: none;">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button type="submit">Sign In with Email/Password</button>
+    </form>
+      </div>
+    </div>
+    <script type="module" src="js/index.js"></script>
+  </body>
+</html>
