@@ -1,0 +1,29 @@
+.dropzone {
+  width: 300px; /* Set your desired width */
+  height: 200px; /* Set your desired height */
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Center horizontally */
+  margin-top: 50px; /* Adjust top margin as needed */
+}
+
+.dropzone h1 {
+  margin: 10px 0;
+  text-align: center; /* Center text horizontally */
+}
+
+.dropzone .actions {
+  margin-top: 20px; /* Adjust top margin as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropzone .actions button {
+  margin: 0 10px; /* Adjust button spacing */
+  padding: 10px 20px; /* Adjust button padding */
+}
