@@ -1,75 +1,50 @@
-// Import required modules
+const WebSocket = require("ws");
 const express = require("express");
-const multer = require("multer");
-const zlib = require("zlib");
-const crypto = require("crypto");
+const http = require("http");
 const path = require("path");
 
-// Initialize Express app
+// Create an Express app
 const app = express();
 
-// Set up middleware
-//app.use(express.json());
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, "public")));
 
-// Serve static files from the root directory
-app.use(express.static(path.join(__dirname, "/public")));
+// Initialize the WebSocket server
+const wss = new WebSocket.Server({ noServer: true });
 
-// Set up multer for handling file uploads
-const upload = multer();
+// Keep track of connected clients
+const clients = new Set();
 
-// Endpoint for file upload
-app.post("/upload", upload.single("file"), (req, res) => {
-  try {
-    // Get file buffer from request
-    const fileBuffer = req.file.buffer;
+// Handle WebSocket connections
+wss.on("connection", (ws) => {
+  console.log("New client connected");
+  clients.add(ws);
 
-    // Check if file exists
-    if (!fileBuffer) {
-      res.status(400).send("No file uploaded.");
-      return;
-    }
-
-    // Compress file using zlib
-    zlib.gzip(fileBuffer, (err, compressedData) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error compressing file.");
-        return;
+  ws.on("message", (message) => {
+    console.log(`Received message: ${message}`);
+    clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(message);
       }
-
-      // Encrypt file using crypto
-      const algorithm = "aes256";
-      const iv = crypto.randomBytes(16);
-      const salt = crypto.randomBytes(16);
-      const key = crypto.pbkdf2Sync(
-        "password", // change this !
-        salt,
-        10000,
-        32,
-        "sha512"
-      );
-      const cipher = crypto.createCipheriv(algorithm, key, iv);
-
-      const encryptedData = Buffer.concat([
-        cipher.update(compressedData),
-        cipher.final(),
-      ]);
-
-      // Send encrypted data as response
-      res.send(encryptedData);
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error.");
-  }
+  });
+
+  ws.on("close", () => {
+    console.log("Client disconnected");
+    clients.delete(ws);
+  });
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+// Create an HTTP server and attach the WebSocket server
+const server = http.createServer(app);
+server.on("upgrade", (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws, request);
+  });
 });
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, () => {
+  console.log(`WebSocket server is running on ws://localhost:${PORT}`);
 });
