@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Upload</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Sender</title>
 </head>
 <body>
-  <h1>Upload a File</h1>
-  <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <button type="submit">Upload</button>
-  </form> 
-  <script src="./js/send.js"></script>
+    <h1>File Sender</h1>
+    <input type="file" id="fileInput" />
+    <button id="sendButton" disabled>Send File</button>
+
+    <script src="/js/send.js"></script>
 </body>
 </html>
