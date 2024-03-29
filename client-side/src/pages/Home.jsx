@@ -6,22 +6,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Home() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleSignOut = () => {
-    setIsSignedIn(false);
-  };
-
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    // Logic for signing in with email/password
-    setIsSignedIn(true);
-  };
 
   // const [isDarkMode, setIsDarkMode] = useState(false);
   // const toggleDarkMode = () => {
@@ -47,60 +32,11 @@ function Home() {
               </button>
             </Link>
             {/* enter the link to send  page*/}
-            <Link to="">
+            <Link to="/recieve">
               <button className="create-a-poll">
                 <span>Receive</span>
               </button>
             </Link>
-            {isSignedIn ? (
-              <button id="signOutButton" onClick={handleSignOut}>
-                <span>Sign Out</span>
-              </button>
-            ) : (
-              <>
-                <Link to="">
-                  <button id="signInButton">
-                    <span>Log In</span>
-                  </button>
-                </Link>
-                <div id="message" style={{ display: "none" }}>
-                  <p>You are signed in!</p>
-                </div>
-                <form
-                  id="emailPasswordForm"
-                  style={{ display: "none" }}
-                  onSubmit={handleSignIn}
-                >
-                  <input type="email" id="email" placeholder="Email" />
-                  <input type="password" id="password" placeholder="Password" />
-                  <button type="submit">Sign In with Email/Password</button>
-                </form>
-              </>
-            )}
-            <div className={`menu-links ${isMenuOpen ? "open" : ""}`}>
-              <ul>
-                <li>
-                  <a href="#" onClick={toggleMenu}>
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="/src/pages/polls.html" onClick={toggleMenu}>
-                    Polls
-                  </a>
-                </li>
-                <li>
-                  <a href="#" onClick={toggleMenu}>
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" onClick={toggleMenu}>
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </main>

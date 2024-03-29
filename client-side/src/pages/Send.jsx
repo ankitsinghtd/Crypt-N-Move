@@ -34,7 +34,6 @@ const Send = () => {
   )
 
   return (
-    <>
         <div 
             className="dropzone"
             onDragOver={handleDragOver}
@@ -47,12 +46,12 @@ const Send = () => {
             multiple
             onChange={(event) => setFiles(event.target.files)}
             hidden
-            accept="image/png, image/jpeg, file/pdf"
+            // accept="image/png, image/jpeg, file/pdf"
             ref={inputRef}
           />
           <button onClick={() => inputRef.current.click()}>Select Files</button>
         </div>
-    </>
+    
   );
 };
 
