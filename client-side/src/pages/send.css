@@ -16,14 +16,21 @@
   text-align: center; /* Center text horizontally */
 }
 
-.dropzone .actions {
-  margin-top: 20px; /* Adjust top margin as needed */
+.uploads {
+  margin-top: 200px; /* Adjust top margin as needed */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.dropzone .actions button {
+.actions {
+  display: flex; /* Display buttons as flex items */
+  margin-top: 20px; /* Adjust top margin as needed */
+  justify-content: center; /* Center buttons horizontally */
+}
+
+.actions button {
   margin: 0 10px; /* Adjust button spacing */
-  padding: 10px 20px; /* Adjust button padding */
+  padding: 10px; /* Adjust button padding */
 }
