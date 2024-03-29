@@ -3,6 +3,7 @@ import "./home.css";
 import "../components/Navbar";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -40,22 +41,28 @@ function Home() {
           <h1>Redefining File Transfers.</h1>
 
           <div className="home-buttons">
-            <button className="make-a-vote">
-              <span>Send</span>
-            </button>
-            <button className="create-a-poll">
-              <span>Receive</span>
-            </button>
-
+            {/* enter the link to send  page*/}
+            <Link to="">
+              <button className="make-a-vote">
+                <span>Send</span>
+              </button>
+            </Link>
+            <Link to="/receive">
+              <button className="create-a-poll">
+                <span>Receive</span>
+              </button>
+            </Link>
             {isSignedIn ? (
               <button id="signOutButton" onClick={handleSignOut}>
                 <span>Sign Out</span>
               </button>
             ) : (
               <>
-                <button id="signInButton">
-                  <span>Log In</span>
-                </button>
+                <Link to="">
+                  <button id="signInButton">
+                    <span>Log In</span>
+                  </button>
+                </Link>
                 <div id="message" style={{ display: "none" }}>
                   <p>You are signed in!</p>
                 </div>
@@ -70,7 +77,6 @@ function Home() {
                 </form>
               </>
             )}
-
             <div className={`menu-links ${isMenuOpen ? "open" : ""}`}>
               <ul>
                 <li>
