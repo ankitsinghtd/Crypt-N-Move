@@ -47,7 +47,7 @@ function Home() {
               </button>
             </Link>
             {/* enter the link to send  page*/}
-            <Link to="">
+            <Link to="/receive">
               <button className="create-a-poll">
                 <span>Receive</span>
               </button>
