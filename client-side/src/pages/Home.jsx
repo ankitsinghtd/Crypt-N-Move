@@ -41,13 +41,13 @@ function Home() {
           <h1>Redefining File Transfers.</h1>
 
           <div className="home-buttons">
-            {/* enter the link to send  page*/}
-            <Link to="">
+            <Link to="/send">
               <button className="make-a-vote">
                 <span>Send</span>
               </button>
             </Link>
-            <Link to="/receive">
+            {/* enter the link to send  page*/}
+            <Link to="">
               <button className="create-a-poll">
                 <span>Receive</span>
               </button>
