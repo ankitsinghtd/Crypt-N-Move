@@ -36,21 +36,6 @@ const Send = () => {
     }
   };
 
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    if (files.length > 0) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileData = reader.result;
-        socketRef.current.send(fileData);
-        console.log("File sent successfully");
-      };
-      reader.readAsArrayBuffer(file);
-    } else {
-      console.error("No file selected");
-    }
-  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -59,12 +44,6 @@ const Send = () => {
   const handleDrop = (event) => {
     event.preventDefault();
     setFiles(event.dataTransfer.files);
-  };
-
-  const handleUpload = () => {
-    const formData = new FormData();
-    formData.append("Files", files);
-    console.log(formData.getAll("Files"));
   };
 
   if (files)
