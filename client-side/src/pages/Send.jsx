@@ -22,9 +22,8 @@ const Send = () => {
   }, []); // Empty dependency array ensures this effect runs only once
 
   const handleSend = () => {
-    const fileInput = inputRef.current;
-    if (fileInput && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
+    if (files && files.length > 0) {
+      const file = files[0];
       const reader = new FileReader();
       reader.onload = () => {
         const fileData = reader.result;
@@ -36,7 +35,22 @@ const Send = () => {
       console.error("No file selected");
     }
   };
-  
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fileData = reader.result;
+        socketRef.current.send(fileData);
+        console.log("File sent successfully");
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      console.error("No file selected");
+    }
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -69,24 +83,18 @@ const Send = () => {
     );
 
   return (
-        <div 
-            className="dropzone"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-        >
-          <h1>Drag and Drop Files to Upload</h1>
-          <h1>Or</h1>
-          <input 
-            type="file"
-            multiple
-            onChange={(event) => setFiles(event.target.files)}
-            hidden
-            // accept="image/png, image/jpeg, file/pdf"
-            ref={inputRef}
-          />
-          <button onClick={() => inputRef.current.click()}>Select Files</button>
-        </div>
-   
+    <div className="dropzone" onDragOver={handleDragOver} onDrop={handleDrop}>
+      <h1>Drag and Drop Files to Upload</h1>
+      <h1>Or</h1>
+      <input
+        type="file"
+        multiple
+        onChange={(event) => setFiles(event.target.files)}
+        hidden
+        ref={inputRef}
+      />
+      <button onClick={() => inputRef.current?.click()}>Select Files</button>
+    </div>
   );
 };
 
