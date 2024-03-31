@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 const Receiver = () => {
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://button-mangrove-draw.glitch.me/");
 
     socket.onopen = () => {
       console.log("WebSocket connection opened");
