@@ -1,6 +1,9 @@
-.dark-mode {
-  color: white;
-  background-color: black;
+.home-container {
+  font-family: "Montserrat", sans-serif;
+  background-image: url("../../public/homepic1.png");
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: 82vh 28vh;
 }
 
 .menu-links {
