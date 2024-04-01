@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import "./home.css";
+import "../Styles/home.css"
 import "../components/Navbar";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
