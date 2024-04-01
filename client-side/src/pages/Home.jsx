@@ -2,6 +2,9 @@
 import "./home.css";
 import "../components/Navbar";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 function Home() {
   return (
@@ -17,14 +20,14 @@ function Home() {
 
             <div className="home-buttons">
               <Link to="/send">
-                <button className="make-a-vote">
-                  <span>Send</span>
+                <button>
+                  <span><FontAwesomeIcon icon={faUpload} /> Send</span>
                 </button>
               </Link>
-              {/* enter the link to send  page*/}
+
               <Link to="/receive">
-                <button className="create-a-poll">
-                  <span>Receive</span>
+                <button>
+                  <span><FontAwesomeIcon icon={faDownload} /> Receive</span>
                 </button>
               </Link>
             </div>
