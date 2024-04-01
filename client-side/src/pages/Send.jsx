@@ -7,7 +7,7 @@ const Send = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://localhost:3001");
+    socketRef.current = new WebSocket("wss://button-mangrove-draw.glitch.me/");
 
     socketRef.current.onopen = () => {
       console.log("WebSocket connection opened");
