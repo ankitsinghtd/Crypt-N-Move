@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./send.css";
+import "../Styles/send.css";
 
 const Send = () => {
   const [files, setFiles] = useState(null);

@@ -5,10 +5,14 @@ import About from "./pages/About";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import { Helmet } from "react-helmet";
 
 function App() {
   return (
     <div className="App">
+      <Helmet>
+        <title>Cryp-N-Move</title>
+      </Helmet>
       <Navbar />
       <Router>
         <Routes>
