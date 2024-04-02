@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Helmet>
-        <title>Cryp-N-Move</title>
+        <title>Crypt-N-Move</title>
       </Helmet>
       <Navbar />
       <Router>
