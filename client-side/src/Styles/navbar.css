@@ -1,31 +1,27 @@
-.nav-container {
-  font-family: "Montserrat", sans-serif;
-  /* background-image: url("../../public/homepic1.png"); */
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: 82vh 28vh;
-  color: white;
-  background-color: black;
-  nav {
-    box-shadow: 0 5px 15px rgba(216, 39, 42, 0.2),
-      /* #d8272a */ 0 5px 15px rgba(66, 133, 244, 0.2),
-      /* #4285f4 */ 0 5px 15px rgba(97, 31, 189, 0.2);
-  }
-  a {
-    color: white;
-  }
+nav {
+  justify-content: space-between;
+  align-items: center;
+  height: 7vh;
+  padding: 0 4vw;
+  position: relative;
+  /* TODO: find better alternatives for blur shadow, this doesn't work */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+nav::after {
+  content: "";
+  position: absolute;
+  top: 6.8vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: linear-gradient(to right, #d8272a 0%, #4285f4 50%, #611fbd 100%);
 }
 
 nav,
 .nav-links {
   display: flex;
-}
-
-nav {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  justify-content: space-around;
-  align-items: center;
-  height: 7vh;
 }
 
 .nav-links {
@@ -48,4 +44,11 @@ a:hover {
 
 .logo {
   font-size: 2rem;
+  span:hover {
+    color: white;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: none;
+  }
 }

@@ -13,8 +13,8 @@ function App() {
       <Helmet>
         <title>Crypt-N-Move</title>
       </Helmet>
-      <Navbar />
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/send" element={<Send />} />
