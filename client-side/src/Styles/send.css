@@ -1,9 +1,17 @@
+.drop-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 175px;
+}
+
 .dropzone {
   width: 300px; /* Set your desired width */
   height: 200px; /* Set your desired height */
   border: 2px dashed #ccc;
   border-radius: 5px;
   display: flex;
+  padding: 30px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -34,3 +42,8 @@
   margin: 0 10px; /* Adjust button spacing */
   padding: 10px; /* Adjust button padding */
 }
+
+.select-file-btn {
+  padding: 10px;
+}
+/* for btn border effect-> todo: create a div with slight larger size than button, then put gradient on div 👌 */
