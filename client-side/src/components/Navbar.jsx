@@ -20,7 +20,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <FontAwesomeIcon icon={faUser} />
+              <FontAwesomeIcon className="user-icon" icon={faUser} />
             </li>
           </ul>
         </div>
