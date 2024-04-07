@@ -1,77 +1,34 @@
 .home-container {
   font-family: "Montserrat", sans-serif;
-  background-image: url("../../public/homepic1.png");
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: 82vh 28vh;
+  height: 100%;
 }
 
-.menu-links {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  width: fit-content;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out; /* Adjusted transition property */
+main h2 span {
+  color: greenyellow;
 }
-
-.menu-links a {
-  display: block;
-  padding: 10px;
-  text-align: center;
-  font-size: 1.5rem;
-  color: black;
-  text-decoration: none;
-  transition: color 0.3s ease-in-out; /* Adjusted transition property */
-}
-
-.menu-links li {
-  list-style: none;
-}
-
-.menu-links.open {
-  max-height: 300px;
-}
-
-.hamburger-icon.open span:first-child {
-  transform: rotate(45deg) translate(10px, 5px);
-}
-
-.hamburger-icon.open span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger-icon.open span:last-child {
-  transform: rotate(-45deg) translate(10px, -5px);
-}
-
-/* Removed duplicate styles for hamburger icon spans */
 
 .main-content {
   text-align: center;
   margin: 0 auto;
 }
 
-.usp-heading {
+.home-heading {
   position: absolute;
   top: 42vh;
   left: 22vh;
   text-align: left;
-}
-
-.usp-heading h1 {
-  font-family: "Mogra", system-ui;
-  font-size: 3rem;
-  background-image: linear-gradient(
-    to right,
-    #d8272a 0%,
-    #4285f4 50%,
-    #611fbd 100%
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  h1 {
+    font-family: "Mogra", system-ui;
+    font-size: 3rem;
+    background-image: linear-gradient(
+      to right,
+      #6528f7 10%,
+      #a076f9 30%,
+      #f2613f 100%
+    );
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 .home-buttons {
@@ -86,36 +43,28 @@ button {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  background: #4285f4;
+  background: #a076f9;
   font-family: "Montserrat", sans-serif;
   box-shadow: 0px 6px 24px 0px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   cursor: pointer;
   border: none;
 }
-
 button:after {
   content: " ";
   width: 0%;
   height: 100%;
-  background: #d8272a;
+  color: white;
+  background: #6528f7;
   position: absolute;
   transition: all 0.4s ease-in-out;
   right: 0;
 }
-
-button:active {
-  color: #666;
-  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
-  transform: translateY(0.2rem);
-}
-
 button:hover::after {
   right: auto;
   left: 0;
   width: 100%;
 }
-
 button span {
   text-align: center;
   text-decoration: none;
@@ -127,23 +76,107 @@ button span {
   letter-spacing: 0.3em;
   z-index: 20;
   transition: color 0.3s ease-in-out; /* Adjusted transition property */
+  a {
+    text-decoration: none;
+  }
 }
 
-button:hover span {
-  color: #183153;
-  animation: scaleUp 0.3s ease-in-out;
+/* home animation part */
+
+.home-hero {
+  display: flex;
 }
 
-@keyframes scaleUp {
-  0% {
-    transform: scale(1);
+.right {
+  flex: 1;
+  .main-icon {
+    position: absolute;
+    top: 300px;
+    right: 150px;
+    width: 400px;
   }
+  .icon-1 {
+    position: absolute;
+    top: 250px;
+    right: 300px;
+    color: #a076f9;
+    font-size: 3rem;
+  }
+  .icon-2 {
+    position: absolute;
+    top: 260px;
+    right: 400px;
+    font-size: 3rem;
+  }
+  .icon-3 {
+    position: absolute;
+    top: 410px;
+    right: 100px;
+    color: #f2613f;
+    font-size: 3rem;
+  }
+  .icon-4 {
+    position: absolute;
+    top: 660px;
+    right: 280px;
+    color: #a076f9;
+    font-size: 3rem;
+  }
+  .icon-5 {
+    position: absolute;
+    top: 650px;
+    right: 520px;
+    color: magenta;
+    font-size: 3rem;
+  }
+  .icon-6 {
+    position: absolute;
+    top: 630px;
+    right: 140px;
+    font-size: 3rem;
+  }
+  .icon-7 {
+    position: absolute;
+    top: 315px;
+    right: 520px;
+    color: #a076f9;
+    font-size: 3rem;
+  }
+  .icon-8 {
+    position: absolute;
+    top: 530px;
+    right: 540px;
+    font-size: 3rem;
+  }
+  .icon-9 {
+    position: absolute;
+    top: 300px;
+    color: magenta;
+    right: 160px;
+    font-size: 3rem;
+  }
+  .icon-10 {
+    position: absolute;
+    top: 690px;
+    right: 400px;
+    font-size: 3rem;
+  }
+  .icon-11 {
+    position: absolute;
+    top: 425px;
+    right: 550px;
+    color: magenta;
+    font-size: 3rem;
+  }
+  .icon-12 {
+    position: absolute;
+    top: 525px;
+    color: magenta;
+    right: 110px;
+    font-size: 3rem;
+  }
+}
 
-  50% {
-    transform: scale(0.95);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+.home-icon {
+  color: #f2613f;
 }
