@@ -1,0 +1,15 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.about-container {
+    margin: 0;
+    color: greenyellow;
+    
+}
+
+section {
+  
+}

@@ -72,9 +72,9 @@ function Home() {
                 ref={(icon) => (refs.current[0] = icon)}
                 style={{
                   transform: transformValues[0],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
-                data-value="6"
+                data-value="20"
                 icon={faIcons}
               />
               <FontAwesomeIcon
@@ -82,7 +82,7 @@ function Home() {
                 ref={(icon) => (refs.current[1] = icon)}
                 style={{
                   transform: transformValues[1],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="4"
                 icon={faImage}
@@ -92,7 +92,7 @@ function Home() {
                 ref={(icon) => (refs.current[2] = icon)}
                 style={{
                   transform: transformValues[2],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="8"
                 icon={faImages}
@@ -102,7 +102,7 @@ function Home() {
                 ref={(icon) => (refs.current[3] = icon)}
                 style={{
                   transform: transformValues[3],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="9"
                 icon={faSdCard}
@@ -112,7 +112,7 @@ function Home() {
                 ref={(icon) => (refs.current[4] = icon)}
                 style={{
                   transform: transformValues[4],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="-2"
                 icon={faFileImage}
@@ -122,7 +122,7 @@ function Home() {
                 ref={(icon) => (refs.current[5] = icon)}
                 style={{
                   transform: transformValues[5],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="-4"
                 icon={faClockRotateLeft}
@@ -132,7 +132,7 @@ function Home() {
                 ref={(icon) => (refs.current[6] = icon)}
                 style={{
                   transform: transformValues[6],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="10"
                 icon={faShieldHalved}
@@ -142,7 +142,7 @@ function Home() {
                 ref={(icon) => (refs.current[7] = icon)}
                 style={{
                   transform: transformValues[7],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="8"
                 icon={faShapes}
@@ -152,7 +152,7 @@ function Home() {
                 ref={(icon) => (refs.current[8] = icon)}
                 style={{
                   transform: transformValues[8],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="12"
                 icon={faCubes}
@@ -162,7 +162,7 @@ function Home() {
                 ref={(icon) => (refs.current[9] = icon)}
                 style={{
                   transform: transformValues[9],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="6"
                 icon={faUnlockKeyhole}
@@ -172,7 +172,7 @@ function Home() {
                 ref={(icon) => (refs.current[10] = icon)}
                 style={{
                   transform: transformValues[10],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="-2"
                 icon={faBolt}
@@ -182,7 +182,7 @@ function Home() {
                 ref={(icon) => (refs.current[11] = icon)}
                 style={{
                   transform: transformValues[11],
-                  transition: "transform 0.2s ease-in-out",
+                  transition: "transform 0.5s ease",
                 }}
                 data-value="4"
                 icon={faMusic}
