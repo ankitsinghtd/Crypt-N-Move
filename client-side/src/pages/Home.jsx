@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import "../Styles/home.css";
 import "../components/Navbar";
 import { Link } from "react-router-dom";
@@ -22,6 +22,7 @@ import { faImages, faFileImage } from "@fortawesome/free-regular-svg-icons";
 function Home() {
   const refs = useRef([]);
   const [transformValues, setTransformValues] = useState({});
+  const timeoutRef = useRef(null);
   const handleMouseMove = (event) => {
     const newTansformValues = {};
     refs.current.forEach((element, index) => {
@@ -34,7 +35,14 @@ function Home() {
       newTansformValues[index] = transform;
     });
     setTransformValues(newTansformValues);
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setTransformValues({});
+    }, 200);
   };
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
   return (
     <>
       <div onMouseMove={handleMouseMove} className="home-container">
