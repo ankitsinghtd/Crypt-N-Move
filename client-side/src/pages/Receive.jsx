@@ -1,42 +1,18 @@
-import React, { useEffect, useState } from "react";
-import "../Styles/receiver.css"; // Import the new CSS file
+import React, { useState } from "react";
+//import { useHistory } from "react-router-dom";
 
 const Receiver = () => {
-  const [socket, setSocket] = useState(null);
   const [sessionID, setSessionID] = useState("");
-
-  useEffect(() => {
-    if (socket) {
-      socket.onopen = () => {
-        console.log("WebSocket connection opened");
-      };
-
-      socket.onmessage = (event) => {
-        const fileData = event.data;
-        const blob = new Blob([fileData], { type: "application/octet-stream" });
-        const url = URL.createObjectURL(blob);
-
-        // Create download link
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "received_file";
-        link.textContent = "Download File";
-
-        // Append link to fileDisplay element
-        const fileDisplay = document.getElementById("fileDisplay");
-        fileDisplay.appendChild(link);
-      };
-
-      // Clean up WebSocket connection when component unmounts
-      return () => {
-        socket.close();
-      };
-    }
-  }, [socket]);
+  //const history = useHistory();
 
   const handleConnect = () => {
-    const newSocket = new WebSocket(`wss://button-mangrove-draw.glitch.me/${sessionID}`);
-    setSocket(newSocket);
+    // Redirect to the room with the entered session ID
+    //history.push(`/p2p/room/${sessionID}`);
+    window.location.href = `/p2p/room/${sessionID}`;
+  };
+
+  const handleChange = (event) => {
+    setSessionID(event.target.value);
   };
 
   const handleKeyPress = (event) => {
@@ -45,26 +21,19 @@ const Receiver = () => {
     }
   };
 
-  const handleChange = (event) => {
-    setSessionID(event.target.value);
-  };
-
   return (
-    <div>
-      <div className="App">
-        <div className="center-container">
-          <div className="entryarea">
-            <input
-              onChange={handleChange}
-              onKeyPress={handleKeyPress}
-              value={sessionID}
-              required
-            />
-            <div className="Labelline">Enter the session</div>
-          </div>
-          <button onClick={handleConnect}>Connect</button>
-        </div>
+    <div className="center-container">
+      <div className="entryarea">
+        <input
+          type="text"
+          value={sessionID}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
+          placeholder="Enter the session ID"
+          required
+        />
       </div>
+      <button onClick={handleConnect}>Connect</button>
     </div>
   );
 };
