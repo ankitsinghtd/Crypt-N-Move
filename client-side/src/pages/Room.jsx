@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import io from "socket.io-client";
-import Peer from "simple-peer";
-import streamSaver from "streamsaver";
 import { Button, Container, Spinner, Form } from "react-bootstrap";
-
-const worker = new Worker("../worker.js");
 
 const Room = () => {
   const [connectionEstablished, setConnection] = useState(false);
@@ -12,88 +8,107 @@ const Room = () => {
   const [gotFile, setGotFile] = useState(false);
 
   const socketRef = useRef();
-  const peerRef = useRef();
+  const peerConnectionRef = useRef();
   const fileNameRef = useRef("");
 
   const roomID = window.location.pathname.split("/").pop(); // Extract roomID from URL
 
-  const createPeer = useCallback((userToSignal, callerID) => {
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
+  const createPeerConnection = useCallback(async (userToSignal, callerID) => {
+    const peerConnection = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }, // STUN server
+      ],
     });
 
-    peer.on("signal", (signal) => {
-      socketRef.current.emit("sending signal", {
-        userToSignal,
-        callerID,
-        signal,
-      });
-    });
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        socketRef.current.emit("sending signal", {
+          userToSignal,
+          callerID,
+          signal: event.candidate,
+        });
+      }
+    };
 
-    peer.on("data", handleReceivingData);
+    peerConnection.ondatachannel = (event) => {
+      event.channel.onmessage = handleReceivingData;
+    };
 
-    return peer;
+    const dataChannel = peerConnection.createDataChannel("dataChannel");
+    dataChannel.binaryType = "arraybuffer";
+
+    return peerConnection;
   }, []);
 
-  const addPeer = useCallback((incomingSignal, callerID) => {
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
+  const addPeer = useCallback(async (incomingSignal, callerID) => {
+    const peerConnection = await createPeerConnection();
+
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        socketRef.current.emit("returning signal", {
+          signal: event.candidate,
+          callerID,
+        });
+      }
+    };
+
+    await peerConnection.setRemoteDescription(incomingSignal);
+
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    socketRef.current.emit("receiving returned signal", {
+      signal: peerConnection.localDescription,
+      id: socketRef.current.id,
     });
 
-    peer.on("signal", (signal) => {
-      socketRef.current.emit("returning signal", { signal, callerID });
-    });
+    peerConnection.ondatachannel = (event) => {
+      event.channel.onmessage = handleReceivingData;
+    };
 
-    peer.on("data", handleReceivingData);
-
-    peer.signal(incomingSignal);
-    setConnection(true);
-    return peer;
-  }, []);
+    return peerConnection;
+  }, [createPeerConnection]);
 
   useEffect(() => {
     socketRef.current = io.connect("http://localhost:8000");
     socketRef.current.emit("join room", roomID);
     socketRef.current.on("all users", (users) => {
-      peerRef.current = createPeer(users[0], socketRef.current.id);
+      if (users.length > 1) {
+        createPeerConnection(users[0], socketRef.current.id).then((peerConnection) => {
+          peerConnectionRef.current = peerConnection;
+          setConnection(true); // Set connectionEstablished to true when all users are received
+        });
+      } else {
+        // Wait for another user to join
+      }
     });
-  
+
     socketRef.current.on("user joined", (payload) => {
-      peerRef.current = addPeer(payload.signal, payload.callerID);
+      addPeer(payload.signal, payload.callerID).then((peerConnection) => {
+        peerConnectionRef.current = peerConnection;
+      });
     });
-  
-    socketRef.current.on("receiving returned signal", (payload) => {
-      peerRef.current.signal(payload.signal);
-      setConnection(true);
-    });
-  
+
     socketRef.current.on("room full", () => {
       alert("room is full");
       window.history.back(); // Go back to the previous page
     });
-  }, [addPeer, createPeer, roomID]);
-  
+  }, [addPeer, createPeerConnection, roomID]);
 
-  function handleReceivingData(data) {
+  function handleReceivingData(event) {
+    const data = event.data;
     if (data.toString().includes("done")) {
       setGotFile(true);
       const parsed = JSON.parse(data);
       fileNameRef.current = parsed.fileName;
     } else {
-      worker.postMessage(data);
+      // Handle received data here
     }
   }
 
   function download() {
     setGotFile(false);
-    worker.postMessage("download");
-    worker.addEventListener("message", (event) => {
-      const stream = event.data.stream();
-      const fileStream = streamSaver.createWriteStream(fileNameRef.current);
-      stream.pipeTo(fileStream);
-    });
+    // Implement download logic here
   }
 
   function selectFile(e) {
@@ -101,33 +116,18 @@ const Room = () => {
   }
 
   function sendFile() {
-    const peer = peerRef.current;
-    const stream = file.stream();
-    console.log(stream);
-    const reader = stream.getReader();
-    console.log(reader);
-
-    reader.read().then((obj) => {
-      handlereading(obj.done, obj.value);
-    });
-
-    function handlereading(done, value) {
-      if (done) {
-        peer.write(JSON.stringify({ done: true, fileName: file.name }));
-        return;
-      }
-
-      peer.write(value);
-      reader.read().then((obj) => {
-        handlereading(obj.done, obj.value);
-      });
-    }
+    // Implement file sending logic here
   }
 
   let copy = () => {
-    let text = document.getElementById("text");
-    text.select();
-    document.execCommand("copy");
+    const text = document.getElementById("text").value;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard");
+      })
+      .catch((error) => {
+        console.error("Unable to copy text to clipboard: ", error);
+      });
   };
 
   let body;

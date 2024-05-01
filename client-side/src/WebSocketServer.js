@@ -1,45 +1,40 @@
 const express = require("express");
 const http = require("http");
 const app = express();
-const cors=require("cors");
-const path = require('path')
+const cors = require("cors");
+const path = require('path');
 
-// Serve static files from the build directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors());
-// Define a catch-all route that serves the index.html file
-app.get('*',(req,res) => {
-  res.sendFile(__dirname + "/public/index.html")
-})
 
 const server = http.createServer(app);
-const socket = require("socket.io");
-const io = socket(server);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
-const users = {};
-
-const socketToRoom = {};
+const rooms = new Map(); 
+const socketToRoom = new Map();
 
 io.on("connection", (socket) => {
   socket.on("join room", (roomID) => {
-    if (users[roomID]) {
-      const length = users[roomID].length;
-      if (length === 2) {
+    if (rooms.has(roomID)) {
+      const usersInRoom = rooms.get(roomID);
+      if (usersInRoom.size === 1) {
+        usersInRoom.set(socket.id, socket);
+        socket.emit("all users", Array.from(usersInRoom.keys()).filter(id => id !== socket.id));
+      } else {
         socket.emit("room full");
         return;
       }
-      users[roomID].push(socket.id);
     } else {
-      users[roomID] = [socket.id];
-      console.log(users);
-      console.log(users[roomID]);
+      rooms.set(roomID, new Map([[socket.id, socket]]));
+      console.log(rooms);
     }
-    socketToRoom[socket.id] = roomID;
-    console.log("dsd" + socketToRoom);
-    console.log("sfsfsdf" + socketToRoom[socket.id]);
-    const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
-
-    socket.emit("all users", usersInThisRoom);
+    socketToRoom.set(socket.id, roomID);
   });
 
   socket.on("sending signal", (payload) => {
@@ -57,16 +52,24 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-    if (room) {
-      room = room.filter((id) => id !== socket.id);
-      users[roomID] = room;
+    const roomID = socketToRoom.get(socket.id);
+    if (rooms.has(roomID)) {
+      const usersInRoom = rooms.get(roomID);
+      usersInRoom.delete(socket.id);
+      if (usersInRoom.size === 0) {
+        rooms.delete(roomID);
+      }
       socket.broadcast.emit("user left", socket.id);
     }
+    socketToRoom.delete(socket.id);
   });
 });
 
-server.listen(process.env.PORT || 8000, () =>
-  console.log("server is running on port 8000")
-);
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+const PORT = process.env.PORT || 8000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

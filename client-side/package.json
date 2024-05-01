@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "buffer": "^6.0.3",
     "clipboard": "^2.0.11",
+    "peer": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
