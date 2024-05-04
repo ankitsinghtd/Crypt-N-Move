@@ -6,6 +6,7 @@ const Room = () => {
   const [connectionEstablished, setConnection] = useState(false);
   const [file, setFile] = useState();
   const [gotFile, setGotFile] = useState(false);
+  const [receivedDataBuffer, setReceivedDataBuffer] = useState([]);
 
   const socketRef = useRef();
   const peerConnectionRef = useRef();
@@ -40,44 +41,49 @@ const Room = () => {
     return peerConnection;
   }, []);
 
-  const addPeer = useCallback(async (incomingSignal, callerID) => {
-    const peerConnection = await createPeerConnection();
+  const addPeer = useCallback(
+    async (incomingSignal, callerID) => {
+      const peerConnection = await createPeerConnection();
 
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        socketRef.current.emit("returning signal", {
-          signal: event.candidate,
-          callerID,
-        });
-      }
-    };
+      peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          socketRef.current.emit("returning signal", {
+            signal: event.candidate,
+            callerID,
+          });
+        }
+      };
 
-    await peerConnection.setRemoteDescription(incomingSignal);
+      await peerConnection.setRemoteDescription(incomingSignal);
 
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
+      const answer = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(answer);
 
-    socketRef.current.emit("receiving returned signal", {
-      signal: peerConnection.localDescription,
-      id: socketRef.current.id,
-    });
+      socketRef.current.emit("receiving returned signal", {
+        signal: peerConnection.localDescription,
+        id: socketRef.current.id,
+      });
 
-    peerConnection.ondatachannel = (event) => {
-      event.channel.onmessage = handleReceivingData;
-    };
+      peerConnection.ondatachannel = (event) => {
+        event.channel.onmessage = handleReceivingData;
+      };
 
-    return peerConnection;
-  }, [createPeerConnection]);
+      return peerConnection;
+    },
+    [createPeerConnection]
+  );
 
   useEffect(() => {
     socketRef.current = io.connect("http://localhost:8000");
     socketRef.current.emit("join room", roomID);
     socketRef.current.on("all users", (users) => {
       if (users.length > 1) {
-        createPeerConnection(users[0], socketRef.current.id).then((peerConnection) => {
-          peerConnectionRef.current = peerConnection;
-          setConnection(true); // Set connectionEstablished to true when all users are received
-        });
+        createPeerConnection(users[0], socketRef.current.id).then(
+          (peerConnection) => {
+            peerConnectionRef.current = peerConnection;
+            setConnection(true); // Set connectionEstablished to true when all users are received
+          }
+        );
       } else {
         // Wait for another user to join
       }
@@ -97,12 +103,37 @@ const Room = () => {
 
   function handleReceivingData(event) {
     const data = event.data;
-    if (data.toString().includes("done")) {
-      setGotFile(true);
-      const parsed = JSON.parse(data);
-      fileNameRef.current = parsed.fileName;
+    if (data instanceof ArrayBuffer) {
+      // Received file chunk
+      // Append the received data to the buffer
+      setReceivedDataBuffer((prevBuffer) => [...prevBuffer, data]);
+    } else if (typeof data === "string" && data === "END_OF_FILE") {
+      // End of file reached
+      // Reconstruct the file using the received data
+
+      // Concatenate all chunks into a single ArrayBuffer
+      const receivedData = new Uint8Array(
+        receivedDataBuffer.reduce((acc, chunk) => acc + chunk.byteLength, 0)
+      );
+      let offset = 0;
+      receivedDataBuffer.forEach((chunk) => {
+        receivedData.set(new Uint8Array(chunk), offset);
+        offset += chunk.byteLength;
+      });
+
+      // Convert ArrayBuffer to Blob
+      const blob = new Blob([receivedData]);
+
+      // Create a download link and simulate a click to download the file
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = fileNameRef.current; // Use the filename received earlier
+      downloadLink.click();
+
+      // Clear the received data buffer for future use
+      setReceivedDataBuffer([]);
     } else {
-      // Handle received data here
+      // Handle other types of data if needed
     }
   }
 
@@ -116,12 +147,67 @@ const Room = () => {
   }
 
   function sendFile() {
-    // Implement file sending logic here
+    console.log("sending file");
+    const peerConnection = peerConnectionRef.current;
+
+    if (!peerConnection) {
+      console.error("Peer connection not available.");
+      return;
+    }
+
+    const dataChannel = peerConnection.createDataChannel("fileTransfer");
+    console.log("data channel created");
+    dataChannel.onerror = (error) => {
+      console.error("Data Channel Error:", error);
+    };
+    
+    console.log("opening data channel");
+
+    dataChannel.onopen = () => {
+      console.log("Data channel opened.");
+      readFileData(dataChannel);
+    };
+
+    dataChannel.onclose = () => {
+      console.log("Data channel closed.");
+    };
+  }
+
+  function readFileData(dataChannel) {
+    const fileReader = new FileReader();
+    const chunkSize = 16384; // 16 KB chunk size
+    console.log("inside file reader");
+    let offset = 0;
+
+    fileReader.onload = () => {
+      const buffer = new Uint8Array(fileReader.result);
+      if (buffer.byteLength > 0) {
+        dataChannel.send(buffer);
+        offset += buffer.byteLength;
+        if (offset < file.size) {
+          readNextChunk();
+        } else {
+          dataChannel.send("END_OF_FILE");
+        }
+      }
+    };
+    console.log("file reading done");
+    fileReader.onerror = (error) => {
+      console.error("File Reader Error:", error);
+    };
+
+    function readNextChunk() {
+      const blob = file.slice(offset, offset + chunkSize);
+      fileReader.readAsArrayBuffer(blob);
+    }
+
+    readNextChunk();
   }
 
   let copy = () => {
     const text = document.getElementById("text").value;
-    navigator.clipboard.writeText(text)
+    navigator.clipboard
+      .writeText(text)
       .then(() => {
         console.log("Text copied to clipboard");
       })
@@ -137,7 +223,8 @@ const Room = () => {
         <br />
         <br />
         <h1>Connected With Peer (You can Share or Transfer Files)</h1>
-        <br/><br/>
+        <br />
+        <br />
         <Form>
           <Form.Label>Select the File:</Form.Label>
           <Form.Control
@@ -146,7 +233,7 @@ const Room = () => {
             type="file"
           ></Form.Control>
         </Form>
-        <br/>
+        <br />
         <Button onClick={sendFile}>Send file</Button>
       </Container>
     );
@@ -190,11 +277,10 @@ const Room = () => {
   if (gotFile) {
     downloadPrompt = (
       <Container className="text-center">
-        <br/><br/>
-        <h3>
-          You have received a file. Would you like to download the file?
-        </h3>
-        <br/>
+        <br />
+        <br />
+        <h3>You have received a file. Would you like to download the file?</h3>
+        <br />
         <Button onClick={download}>Yes</Button>
       </Container>
     );
