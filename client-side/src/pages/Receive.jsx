@@ -8,7 +8,7 @@ const Receiver = () => {
   const handleConnect = () => {
     // Redirect to the room with the entered session ID
     //history.push(`/p2p/room/${sessionID}`);
-    window.location.href = `/p2p/room/${sessionID}`;
+    window.location.href = `/room/${sessionID}`;
   };
 
   const handleChange = (event) => {

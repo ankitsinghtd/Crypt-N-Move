@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
   socket.on("join room", (roomID) => {
     if (rooms.has(roomID)) {
       const usersInRoom = rooms.get(roomID);
-      if (usersInRoom.size === 1) {
+      if (usersInRoom.size > 0) {
         usersInRoom.set(socket.id, socket);
         socket.emit("all users", Array.from(usersInRoom.keys()).filter(id => id !== socket.id));
       } else {
