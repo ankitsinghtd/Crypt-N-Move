@@ -13,9 +13,9 @@
     .addEventListener("click", function () {
       let joinID = generateID();
       document.querySelector("#join-id").innerHTML = `
-            <b>Room ID</b>
-            <span>${joinID}</span>
-        `;
+			<b>Room ID</b>
+			<span>${joinID}</span>
+		`;
       socket.emit("sender-join", {
         uid: joinID,
       });
@@ -37,12 +37,13 @@
       let reader = new FileReader();
       reader.onload = function (e) {
         let buffer = new Uint8Array(reader.result);
+
         let el = document.createElement("div");
         el.classList.add("item");
         el.innerHTML = `
-            <div class="progess">0%</div>
-            <div class="filename">${file.name}</div>
-        `;
+					<div class="progress">0%</div>
+					<div class="filename">${file.name}</div>
+			`;
         document.querySelector(".files-list").appendChild(el);
         shareFile(
           {
@@ -56,25 +57,28 @@
       };
       reader.readAsArrayBuffer(file);
     });
+
   function shareFile(metadata, buffer, progress_node) {
     socket.emit("file-meta", {
       uid: receiverID,
       metadata: metadata,
     });
+
     socket.on("fs-share", function () {
       let chunk = buffer.slice(0, metadata.buffer_size);
       buffer = buffer.slice(metadata.buffer_size, buffer.length);
-      progress_node.innerText =
-        Math.trunc(
-          ((metadata.total_buffer_size - buffer.length) /
-            metadata.total_buffer_size) *
-            100
-        ) + "%";
+      progress_node.innerText = Math.trunc(
+        ((metadata.total_buffer_size - buffer.length) /
+          metadata.total_buffer_size) *
+          100
+      );
       if (chunk.length != 0) {
         socket.emit("file-raw", {
           uid: receiverID,
           buffer: chunk,
         });
+      } else {
+        console.log("Sent file successfully");
       }
     });
   }

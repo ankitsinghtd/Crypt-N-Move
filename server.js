@@ -19,12 +19,12 @@ io.on("connection", function (socket) {
   socket.on("file-meta", function (data) {
     socket.in(data.uid).emit("fs-meta", data.metadata);
   });
-  socket.on("file-start", function (data) {
+  socket.on("fs-start", function (data) {
     socket.in(data.uid).emit("fs-share", {});
   });
-  socket.on("fs-raw", function (data) {
+  socket.on("file-raw", function (data) {
     socket.in(data.uid).emit("fs-share", data.buffer);
   });
 });
 
-server.listen(8000);
+server.listen(5000);
